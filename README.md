@@ -1,7 +1,8 @@
-# WeatherMobile
-Dev Ada Project 2024
+# React + Vite
 
-This web application is designed to help users check the weather of different major cities between their start location and end location.
-Other features include route optimization, time specific weather and reccomendations for clothing and items.
-We're using React.js and Visual Studio Code as well as existing APIs.
-Coming soon!
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
