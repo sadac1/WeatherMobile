@@ -8,7 +8,7 @@ import StopsData from './Component/StopsData'
 
 function App() {
   let name = 'Weather Mobile';
-  let statement = 'START YOUR JOURNEY';
+  //let statement = 'START YOUR JOURNEY';
   return (<>
   <h1>{name}</h1>
   <br></br>

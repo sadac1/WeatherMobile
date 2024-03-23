@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import {useState} from 'react';
 function StopsData(){
     //text boxes for time and stops
+    
+    
     const [time, setTime] = useState("Estimated Start Time");
     const [startDate, setStartDate] = useState("Estimated Start Date");
     const [start, setStart] = useState("Start Location");
@@ -41,6 +43,7 @@ function StopsData(){
 
     //following updates the textbox with what the user inputs.
     const handleChangeTime = (event1) => {
+
         setTime(event1.target.value)
     }
     const handleChangeStartDate = (event6) => {
@@ -83,8 +86,20 @@ function StopsData(){
     //This is where results will be coded.
     const getPlan = (num) => {
         //calculations will go here.
+        //location1 + Weather1
+        //location2 + Weather2
         setPlan(start + " is super sunny! Good for you <3")
     }
+
+    const getDistance = (loc1, loc2) => {
+
+    }
+    
+    const addTime = (time1, distance) => {
+        
+    }
+
+    const getWeather = (loc, )
 
     //display all
     return (<>
