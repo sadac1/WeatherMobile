@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 //import Form from 'react-bootstrap/Form';
 import {useState} from 'react';
+
+
 function StopsData(){
     //text boxes for time and stops
     
@@ -17,7 +19,9 @@ function StopsData(){
     //const [showStop, setShowStop] = React.useState(false)
 
     //following stores all the data from the user. Gets updated in the handleChange functions
+    //turn this into a struct
     let data = [{time}, {startDate}, {start}, {stop1}, {stop2}, {end}]
+
 
     let num = 1 //testing getPlan below
 
@@ -82,27 +86,56 @@ function StopsData(){
     //i think there was something related to this in the 1 hr react tutorial.
     let finalPlan = "stop 1 is super sunny! Good for you <3"
     
+    //Following is for dummy data lol if we can't use API
+    const mph = 60
 
+    /*
+    Tasks: 
+    1) Alexia : Create dummy data as json file. Format per line: {Location Name, longitude, latitude}
+    2) Rikhita : DropDown Dates so that we know dates are good 
+    3) Kirthi : getPlan
+    4) Kirthi : getTimeToTravel manual implementation 
+    5) Sada : helperGetHoursFormatted implementation
+    6) Bavya : getWeather
+     */
     //This is where results will be coded.
+
+    //Kirthi
     const getPlan = (num) => {
         //calculations will go here.
         //location1 + Weather1
         //location2 + Weather2
         setPlan(start + " is super sunny! Good for you <3")
     }
-
-    const getDistance = (loc1, loc2) => {
-
-    }
-    
-    const addTime = (time1, distance) => {
-
-    }
-
-    const getWeather = (loc) => {
-        
+    /* getTimeToTravel
+    Takes in two locations
+    Returns: time it takes to travel between two locations (loc1, loc2)
+    Format should be in : hours (as decimal)
+    */
+    const getTimeToTravel = (loc1, loc2) => {
+        //Either API: get time to travel between two locs
+        //Or: We calculate distance, multiply by mph var above
     }
 
+    /* addTime
+    Takes in inital time (hours as decimal)
+    Adds both times and returns new time as (hours as decimal)
+    */
+    const addTime = (time1, timeToTravel) => {
+        //return time1 + timetoTravel (this will have to be formatted properly)
+    }
+
+    //Bavya
+    const getWeather = (loc, time) => {
+        //getting weather API data with loc and time
+        //
+    }
+
+    // Takes in hours as a decimal, returns as a string
+    const helperGetHoursFormatted = (hours) => {
+        //returns hours formatted as a string
+        //see already made function in docs
+    }
     //display all
     return (<>
         <h2>{statement}</h2>
