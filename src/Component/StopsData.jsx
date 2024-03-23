@@ -96,10 +96,12 @@ function StopsData(){
     }
     
     const addTime = (time1, distance) => {
-        
+
     }
 
-    const getWeather = (loc, )
+    const getWeather = (loc) => {
+        
+    }
 
     //display all
     return (<>
