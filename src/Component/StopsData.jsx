@@ -124,6 +124,7 @@ function StopsData(){
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
 
         //displays all the weather as textboxes
+        //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
         return (
             <>
             <div>
