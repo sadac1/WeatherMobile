@@ -1,11 +1,22 @@
 import React, {Component} from 'react';
 //import Form from 'react-bootstrap/Form';
 import {useState} from 'react';
+import WeatherInfo from './WeatherInfo';
+/*
+const WeatherInfo = (props) => {
+    const location = props.location;
+    const time = props.time;
+    const temperature = props.temperature;
+    const precipitation = props.precipitation;
+    const windSpeed = props.windSpeed;
+}*/
 
 
 function StopsData(){
-    //text boxes for time and stops
     
+    //these are all the variables that the user will input. 
+    //in order to change the first parameter, use the second parameter. Ex. setTime(1:30) will change time to 1:30
+    // useState("estimated start time") <- inside quotes is the default thing that shows. You can see it with npm run dev.
     
     const [time, setTime] = useState("Estimated Start Time");
     const [startDate, setStartDate] = useState("Estimated Start Date");
@@ -13,31 +24,25 @@ function StopsData(){
     const [stop1, setStop1] = useState("Stop");
     const [stop2, setStop2] = useState("Stop");
     const [end, setEnd] = useState("End Location");
-    const [plan, setPlan] = useState("");
+    //not using this anymore, instead directly displaying plan from getPlan function: const [plan, setPlan] = useState("");
 
-    //how stops will appear and disappear <- not implemented yet
+    //how stops will appear and disappear with plus button<- not implemented yet
     //const [showStop, setShowStop] = React.useState(false)
 
-    //following stores all the data from the user. Gets updated in the handleChange functions
-    //turn this into a struct
+    //following array stores all the data from the user. These values get updated in the handleChange functions
+    //Kirthi: turn this into a struct/props so that we don't need to call time start data blah separately, instead can do data.blah
     let data = [{time}, {startDate}, {start}, {stop1}, {stop2}, {end}]
 
-
-    let num = 1 //testing getPlan below
-
-    const handleSubmit = (event) => {
+    //this function console.logs the current values in data and calls getPlan, which displays the plan in the lower box.
+    const handleSubmitGetPlan = (event) => {
         event.preventDefault();
-        //console.log(time)
         //alert(time)
-        /*if (time == "3:30") {
-            console.log("Time is 3:30!")
-        }*/
         console.log(data)
-        //following is not working
-        num = num + 1
-        getPlan(2)
+        getPlan()
     }
-    //find out how to make the default text disappear when someone starts typing
+
+    //Note: find out how to make the default text disappear when someone starts typing
+    //Currently, this function is not being used. 
     const handleClick = (event0) => {
         event0.preventDefault();
         console.log("clicked")
@@ -45,9 +50,9 @@ function StopsData(){
         //[start, setStart] = useState("");
     }
 
-    //following updates the textbox with what the user inputs.
+    //following handleChange functions update the textboxes to display what the user inputs
+    // and update the values in the data array above : time, startDate, start, stop1, stop2, end
     const handleChangeTime = (event1) => {
-
         setTime(event1.target.value)
     }
     const handleChangeStartDate = (event6) => {
@@ -60,34 +65,32 @@ function StopsData(){
         setStop1(event3.target.value)
     }
     const handleChangeStop2 = (event4) => {
-        console.log("this too")
         setStop2(event4.target.value)
     }    
     const handleChangeEnd = (event5) => {
-        console.log("this too")
         setEnd(event5.target.value)
     }
 
+    //For adding stops with plus-button click. This is not being used right now. 
     const handlePlusButtonClick = (event7) => {
         console.log("Add another stop")
         setShowStop(true)
     }
+
     const statement = 'DESCRIBE YOUR JOURNEY';
-    //currently button to add the stop doesn't work, so the stop is just going to be there
+
+    //Not being used right now
+    //currently button to add the stop doesn't work, so the stop is just going to be there already.
     const Stops = () => {
         <div>
         <form>
-            <input type = "text" value = {stop} onChange = {handleChange}/>
+            <input type = "text" value = {stop} onChange = {handleChangeStop1}/>
         </form>
         </div>
     }
     
-    //something to figure out: how to make the buttons work in real time. 
-    //i think there was something related to this in the 1 hr react tutorial.
-    let finalPlan = "stop 1 is super sunny! Good for you <3"
-    
-    //Following is for dummy data lol if we can't use API
-    const mph = 60
+    //Following is for dummy data lol if we can't use API. Will multiply this by distance. 
+    const MPH = 60
 
     /*
     Tasks: 
@@ -101,11 +104,45 @@ function StopsData(){
     //This is where results will be coded.
 
     //Kirthi
-    const getPlan = (num) => {
+    const getPlan = () => {
         //calculations will go here.
         //location1 + Weather1
         //location2 + Weather2
         setPlan(start + " is super sunny! Good for you <3")
+        
+        //following are the times when user will be at each location
+        //when user is at stop1:
+        const [t2, setT2] = useState("")
+        setT2(addTime(time, getTimeToTravel(start, stop1)))
+
+        //when user is at stop2:
+        const [t3, setT3] = useState("")
+        setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
+    
+        //when user is at end:
+        const [t4, setT4] = useState("")
+        setT4(addTime(t3, getTimeToTravel(stop2, end)))
+
+        //displays all the weather as textboxes
+        return (
+            <>
+            <div>
+                <WeatherInfo location_ = {start} time_ = {time} weather = {getWeather(start, time)} />
+            </div>
+            <br></br>
+            <div>
+                <WeatherInfo location_ = {stop1} time_ = {t2} weather = {getWeather(stop1, t2)} />
+            </div>
+            <br></br>
+            <div>
+                <WeatherInfo location_ = {stop2} time_ = {t3} weather = {getWeather(stop2, t3)} />
+            </div>
+            <br></br>
+            <div>
+                <WeatherInfo location_ = {end} time_ = {t4} weather = {getWeather(end, t4)} />
+            </div>
+            </>
+        )
     }
     /* getTimeToTravel
     Takes in two locations
@@ -114,9 +151,15 @@ function StopsData(){
     */
     const getTimeToTravel = (loc1, loc2) => {
         //Either API: get time to travel between two locs
-        //Or: We calculate distance, multiply by mph var above
-    }
+        //Or: We calculate distance, multiply by MPH var above w dummy data
+        //distance between two locs: =acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371 
+    /*
+        dist = ...
 
+        return dist * MPH
+    */
+
+    }
     /* addTime
     Takes in inital time (hours as decimal)
     Adds both times and returns new time as (hours as decimal)
@@ -129,6 +172,7 @@ function StopsData(){
     const getWeather = (loc, time) => {
         //getting weather API data with loc and time
         //
+        //please return a array with [temperature, precipitation, windspeed]
     }
 
     // Takes in hours as a decimal, returns as a string
@@ -140,7 +184,7 @@ function StopsData(){
     return (<>
         <h2>{statement}</h2>
         <div>
-            <form onSubmit = {handleSubmit} /*onClick = {handleClick}*/>
+            <form onSubmit = {handleSubmitGetPlan} /*onClick = {handleClick}*/>
                 <input type="text" value={time} onChange={handleChangeTime}/>
                 <input type="text" value={startDate} onChange={handleChangeStartDate}/>
                 <br></br>
@@ -160,7 +204,7 @@ function StopsData(){
         </div>
         <h2>Happy Travels!</h2>
         <div>
-            <input type='text' readOnly={true} value={plan} style={{height: "370px", width: "370px"}}/>
+            <getPlan/>
             <br></br>
             <br></br>
             <button>Download Plan</button>
