@@ -1,0 +1,12 @@
+[
+    {"Location Name": "Chicago", "longitude": -87.6298, "latitude": 41.8781},
+    {"Location Name": "Springfield", "longitude": -89.6501, "latitude": 39.7817},
+    {"Location Name": "Rockford", "longitude": -89.0938, "latitude": 42.2714},
+    {"Location Name": "Peoria", "longitude": -89.5889, "latitude": 40.6936},
+    {"Location Name": "Champaign", "longitude": -88.2434, "latitude": 40.1164},
+    {"Location Name": "Naperville", "longitude": -88.1535, "latitude": 41.7508},
+    {"Location Name": "Aurora", "longitude": -88.3201, "latitude": 41.7606},
+    {"Location Name": "Bloomington", "longitude": -88.9906, "latitude": 40.4842},
+    {"Location Name": "Joliet", "longitude": -88.0817, "latitude": 41.525},
+    {"Location Name": "Decatur", "longitude": -88.9548, "latitude": 39.8403}
+]
