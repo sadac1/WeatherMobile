@@ -176,10 +176,13 @@ function StopsData(){
         //please return a array with [temperature, precipitation, windspeed]
     }
 
+    //Sada
     // Takes in hours as a decimal, returns as a string
     const helperGetHoursFormatted = (hours) => {
         //returns hours formatted as a string
         //see already made function in docs
+        const formattedHours = new Date(hours * 3600 * 1000).toISOString().substring(11, 16);
+        return formattedHours;
     }
     //display all
     return (<>
