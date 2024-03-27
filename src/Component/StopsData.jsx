@@ -28,6 +28,69 @@ function StopsData(){
     const [stop1, setStop1] = useState("Stop");
     const [stop2, setStop2] = useState("Stop");
     const [end, setEnd] = useState("End Location");
+
+//Time of arrival at stop 1, stop 2, end
+    const [t2, setT2] = useState("")
+    const [t3, setT3] = useState("")
+    const [t4, setT4] = useState("")
+
+//copied and pasted from DummyData.json
+    const dummyDataJson = `
+    [
+        {
+            "location": "Chicago",
+            "longitude": -87.6298,
+             "latitude": 41.8781
+        },
+        {
+            "location": "Springfield",
+            "longitude": -89.6501,
+            "latitude": 39.7817
+        },
+        {
+            "location": "Rockford",
+            "longitude": -89.0938,
+             "latitude": 42.2714
+            },
+        {
+            "location": "Peoria",
+            "longitude": -89.5889, 
+            "latitude": 40.6936
+        },
+        {
+            "location": "Champaign", 
+            "longitude": -88.2434, 
+            "latitude": 40.1164
+        },
+        {
+            "location": "Naperville", 
+            "longitude": -88.1535, 
+            "latitude": 41.7508
+        },
+        {
+            "location": "Aurora", 
+            "longitude": -88.3201, 
+            "latitude": 41.7606
+        },
+        {
+            "location": "Bloomington", 
+            "longitude": -88.9906, 
+            "latitude": 40.4842
+        },
+        {
+            "location": "Joliet", 
+            "longitude": -88.0817, 
+            "latitude": 41.525
+        },
+        {
+            "location": "Decatur", 
+            "longitude": -88.9548, 
+            "latitude": 39.8403
+        }
+    ]
+    `;
+
+    const dummyData = JSON.parse(dummyDataJson);
     //not using this anymore, instead directly displaying plan from getPlan function: const [plan, setPlan] = useState("");
 
     //how stops will appear and disappear with plus button<- not implemented yet
@@ -117,22 +180,18 @@ function StopsData(){
     //Kirthi
     const getPlan = () => {
         //calculations will go here.
-        //location1 + Weather1
-        //location2 + Weather2
-        setPlan(start + " is super sunny! Good for you <3")
-        
+        //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
         //when user is at stop1:
-        const [t2, setT2] = useState("")
         setT2(addTime(time, getTimeToTravel(start, stop1)))
 
         //when user is at stop2:
-        const [t3, setT3] = useState("")
         setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
     
         //when user is at end:
-        const [t4, setT4] = useState("")
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
+
+        console.log(getTimeToTravel(start, stop1))
 
         //displays all the weather as textboxes
         //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
@@ -154,7 +213,7 @@ function StopsData(){
                 <WeatherInfo location_ = {end} time_ = {t4} weather = {getWeather(end, t4)} />
             </div>
             </>
-        )
+        );
     }
     /* getTimeToTravel
     Takes in two locations
@@ -165,19 +224,42 @@ function StopsData(){
         //Either API: get time to travel between two locs
         //Or: We calculate distance, multiply by MPH var above w dummy data
         //distance between two locs: =acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371 
+        
+        //const dummy = JSON.parse('DummyData.json')
+        console.log(dummyData)
     /*
         dist = ...
 
         return dist * MPH
     */
-
+        let l1_lat = 0
+        let l1_lon = 0
+        let l2_lat = 0
+        let l2_lon = 0
+        console.log(dummyData[0].location)
+        for (let i = 0; i < Object.keys(dummyData).length; i++) {
+            if (dummyData[i].location == loc1) {
+                l1_lat = dummyData[i].latitude;
+                l1_lon = dummyData[i].longitude;
+            }
+            if (dummyData[i].location == loc2) {
+                l2_lat = dummyData[i].latitude;
+                l2_lon = dummyData[i].longitude;
+            }
+        }
+       //return Math.sqrt((l2_lat - l1_lat) * (l2_lat - l1_lat) + (l2_lon - l1_lon) * (l2_lon - l1_lon)) / MPH;
+       return Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * 3958.756 / MPH;
     }
+
     /* addTime
     Takes in inital time (hours as decimal)
     Adds both times and returns new time as (hours as decimal)
     */
     const addTime = (time1, timeToTravel) => {
         //return time1 + timetoTravel (this will have to be formatted properly)
+        let timeToTravelInHours = helperGetHoursFormatted(timeToTravel);
+        //time1 is already formatted, so now add two new and then send.
+        return time1;
     }
 
     //Bavya
