@@ -4,6 +4,8 @@ import {useState} from 'react';
 import WeatherInfo from './WeatherInfo';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment'; // Importing Moment JS
+
 /*
 const WeatherInfo = (props) => {
     const location = props.location;
@@ -192,7 +194,7 @@ function StopsData(){
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
 
         console.log(getTimeToTravel(start, stop1))
-
+        console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
         //displays all the weather as textboxes
         //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
         return (
@@ -248,7 +250,8 @@ function StopsData(){
             }
         }
        //return Math.sqrt((l2_lat - l1_lat) * (l2_lat - l1_lat) + (l2_lon - l1_lon) * (l2_lon - l1_lon)) / MPH;
-       return Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * 3958.756 / MPH;
+       //return Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * 3958.756 / MPH;
+       return Math.sqrt((l2_lat - l1_lat) * (l2_lat - l1_lat) + (l2_lon - l1_lon) * (l2_lon - l1_lon)) / MPH
     }
 
     /* addTime
@@ -263,11 +266,44 @@ function StopsData(){
     }
 
     //Bavya
-    const getWeather = (loc, time) => {
         //getting weather API data with loc and time
         //
         //please return a array with [temperature, precipitation, windspeed]
-    }
+       // const fetch = require('node-fetch');
+
+       const getWeather = async (loc, time) => {
+           const apiKey = 'iLXXcJ7nO1Fmt3HBdaVrc10IEN7Fl0I9'; // Ensure the API key is a string
+           const location = loc; // Location format should be "lat,long"
+           const units = 'metric';
+           const fields = ['temperature', 'precipitationIntensity', 'windSpeed']; // Adjusted fields to include
+      
+           // Assuming 'time' is a specific hour in ISO format (e.g., "2024-03-27T05:00:00Z")
+           const startTime = time;
+           const endTime = new Date(new Date(time).getTime() + 60*60*1000).toISOString(); // Adds 1 hour to start time
+      
+           const url = `https://api.tomorrow.io/v4/timelines?apikey=${apiKey}&location=${location}&fields=${fields.join(',')}&units=${units}&timesteps=current&startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}`;
+      
+           try {
+               const response = await fetch(url);
+               if (!response.ok) {
+                   throw new Error(`Network response was not ok (${response.statusText})`);
+               }
+               const data = await response.json();
+      
+               // Extracting weather data from the first interval as an example
+               const interval = data.data.timelines[0].intervals[0].values;
+               const temperature = interval.temperature; // Temperature
+               const precipitation = interval.precipitationIntensity; // Precipitation intensity
+               const windSpeed = interval.windSpeed; // Wind speed
+      
+               // Returning an array with the requested values
+               //return [temperature, precipitation, windSpeed]; << bring this back once it's confirmed that code works
+               return [1, 2, 3]
+           } catch (error) {
+               console.error('There was an error fetching the weather data:', error);
+               return []; // Return an empty array or suitable defaults in case of error
+           }
+       };
 
     //Sada
     // Takes in hours as a decimal, returns as a string
