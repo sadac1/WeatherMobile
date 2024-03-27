@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 //import Form from 'react-bootstrap/Form';
 import {useState} from 'react';
 import WeatherInfo from './WeatherInfo';
+import DatePicker from 'react-datepicker'; // Import DatePicker
+import 'react-datepicker/dist/react-datepicker.css';
 /*
 const WeatherInfo = (props) => {
     const location = props.location;
@@ -17,9 +19,11 @@ function StopsData(){
     //these are all the variables that the user will input. 
     //in order to change the first parameter, use the second parameter. Ex. setTime(1:30) will change time to 1:30
     // useState("estimated start time") <- inside quotes is the default thing that shows. You can see it with npm run dev.
-    
-    const [time, setTime] = useState("Estimated Start Time");
+    const [time, setTime] = useState(null); // Change to null since we're using time
+    const [startDate, setStartDate] = useState(null); // Change to null since we're using date
+    /*const [time, setTime] = useState("Estimated Start Time");
     const [startDate, setStartDate] = useState("Estimated Start Date");
+    */
     const [start, setStart] = useState("Start Location");
     const [stop1, setStop1] = useState("Stop");
     const [stop2, setStop2] = useState("Stop");
@@ -52,12 +56,19 @@ function StopsData(){
 
     //following handleChange functions update the textboxes to display what the user inputs
     // and update the values in the data array above : time, startDate, start, stop1, stop2, end
-    const handleChangeTime = (event1) => {
+    const handleChangeTime = (selectedTime) => {
+        setTime(selectedTime);
+    };
+
+    const handleChangeStartDate = (selectedDate) => {
+        setStartDate(selectedDate);
+    };
+    /*const handleChangeTime = (event1) => {
         setTime(event1.target.value)
     }
     const handleChangeStartDate = (event6) => {
         setStartDate(event6.target.value)
-    }
+    } */
     const handleChangeStart = (event2) => {
         setStart(event2.target.value)
     }
@@ -185,13 +196,37 @@ function StopsData(){
         return formattedHours;
     }
     //display all
+    /*
+                <input type="text" value={time} onChange={handleChangeTime}/>
+                <input type="text" value={startDate} onChange={handleChangeStartDate}/>
+                <br></br> */
     return (<>
         <h2>{statement}</h2>
         <div>
             <form onSubmit = {handleSubmitGetPlan} /*onClick = {handleClick}*/>
-                <input type="text" value={time} onChange={handleChangeTime}/>
-                <input type="text" value={startDate} onChange={handleChangeStartDate}/>
-                <br></br>
+                <div>
+                        <label>Start Time:</label>
+                        <DatePicker
+                            selected={time}
+                            onChange={handleChangeTime}
+                            showTimeSelect
+                            showTimeSelectOnly
+                            timeIntervals={15}
+                            dateFormat="h:mm aa"
+                            placeholderText="Select Time"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Start Date:</label>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={handleChangeStartDate}
+                            dateFormat="MMMM d, yyyy"
+                            placeholderText="Select Start Date"
+                        />
+                    </div>
+
                 <input type="text" value={start} onChange={handleChangeStart}/>
                 <br></br>
                 <input type = "text" value = {stop1} onChange = {handleChangeStop1}/>
