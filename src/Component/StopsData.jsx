@@ -36,6 +36,21 @@ function StopsData(){
     const [t3, setT3] = useState("")
     const [t4, setT4] = useState("")
 
+//weather at start, stop1, stop2, end
+    const [weather1, setWeather1] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
+    const [weather2, setWeather2] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
+    const [weather3, setWeather3] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
+    const [weather4, setWeather4] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
+
+    const [disp1, setDisp1] = useState("");
+    const [w1, setW1] = useState("");
+    const [disp2, setDisp2] = useState("");
+    const [w2, setW2] = useState("");
+    const [disp3, setDisp3] = useState("");
+    const [w3, setW3] = useState("");
+    const [disp4, setDisp4] = useState("");
+    const [w4, setW4] = useState("");
+
 //copied and pasted from DummyData.json
     const dummyDataJson = `
     [
@@ -187,13 +202,30 @@ function StopsData(){
         //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
         //when user is at stop1:
-        setT2(addTime(time, getTimeToTravel(start, stop1)))
+        getWeather(start, time, 1)
 
+        setT2(addTime(time, getTimeToTravel(start, stop1)))
+        
+        getWeather(stop1, t2, 2)
         //when user is at stop2:
         setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
     
+        getWeather(stop2, t3, 3)
         //when user is at end:
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
+
+        getWeather(end, t3, 4)
+        setDisp1(start + " at " + time);
+        setW1(weather1.temp + "F, " + "P: " + weather1.prec + "%,  " + "W: " + weather1.wind + "mph");
+
+        setDisp2(stop1 + " at " + t2);
+        setW2(weather2.temp + "F, " + "P: " + weather2.prec + "%,  " + "W: " + weather2.wind + "mph");
+
+        setDisp3(stop2 + " at " + t3);
+        setW3(weather3.temp + "F, " + "P: " + weather3.prec + "%,  " + "W: " + weather3.wind + "mph");
+
+        setDisp4(end + " at " + t4);
+        setW4(weather4[0]+ "F, " + "P: " + weather4.prec + "%,  " + "W: " + weather4.wind + "mph");
 
         console.log(getTimeToTravel(start, stop1))
         console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
@@ -254,7 +286,7 @@ function StopsData(){
         //please return a array with [temperature, precipitation, windspeed]
        // const fetch = require('node-fetch');
 
-       const getWeather = async (loc, time) => {
+       const getWeather = async (loc, time, point) => {
 
            const apiKey = 'iLXXcJ7nO1Fmt3HBdaVrc10IEN7Fl0I9'; // Ensure the API key is a string
            const location = loc; // Location format should be "lat,long"
@@ -282,11 +314,22 @@ function StopsData(){
                
                // Returning an array with the requested values
                //return [temperature, precipitation, windSpeed]; << bring this back once it's confirmed that code works
-               return [1, 2, 3];
+               //INSTEAD OF RETURNING: setting the const values to the corresponding weather data
+               if (temperature != null && precipitation != null && windSpeed != null) {
+               if (point == 1) {
+                setWeather1(temperature, precipitation, windSpeed)
+               } else if (point == 2) {
+                setWeather2(temperature, precipitation, windSpeed)
+               } else if (point == 3) {
+                setWeather3(temperature, precipitation, windSpeed)
+               } else if (point == 4){
+                setWeather4(temperature, precipitation, windSpeed)
+               }
+            }
             //commented to test WeatherInfo
            } catch (error) {
                console.error('There was an error fetching the weather data:', error);
-               return []; // Return an empty array or suitable defaults in case of error
+               //return [2, 4, 6]; // Return an empty array or suitable defaults in case of error
            }
        };
 
@@ -356,21 +399,20 @@ function StopsData(){
         </div>
         <h2>Happy Travels!</h2>
         <div>
-            <div>
-                <WeatherInfo location_ = {start} time_ = {time} weather = {getWeather(start, time)} />
-            </div>
+            <input type="text" value={disp1} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input type="text" value={w1} readOnly = {true} style={{width: "370px", height: "50px"}}/>
             <br></br>
-            <div>
-                <WeatherInfo location_ = {stop1} time_ = {t2} weather = {getWeather(stop1, t2)} />
-            </div>
             <br></br>
-            <div>
-                <WeatherInfo location_ = {stop2} time_ = {t3} weather = {getWeather(stop2, t3)} />
-            </div>
+            <input type="text" value={disp2} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input type="text" value={w2} readOnly = {true} style={{width: "370px", height: "50px"}}/>
             <br></br>
-            <div>
-                <WeatherInfo location_ = {end} time_ = {t4} weather = {getWeather(end, t4)} />
-            </div>           
+            <br></br>
+            <input type="text" value={disp3} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input type="text" value={w3} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <br></br>
+            <br></br>
+            <input type="text" value={disp4} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input type="text" value={w4} readOnly = {true} style={{width: "370px", height: "50px"}}/>
             <br></br>
             <br></br>
             <button>Download Plan</button>
