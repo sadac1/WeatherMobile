@@ -37,10 +37,10 @@ function StopsData(){
     const [t4, setT4] = useState("")
 
 //weather at start, stop1, stop2, end
-    const [weather1, setWeather1] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
-    const [weather2, setWeather2] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
-    const [weather3, setWeather3] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
-    const [weather4, setWeather4] = useState({"temp" : "t", "prec" : "p", "wind" : "w"})
+    const [weather1, setWeather1] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
+    const [weather2, setWeather2] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
+    const [weather3, setWeather3] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
+    const [weather4, setWeather4] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
 
     const [disp1, setDisp1] = useState("");
     const [w1, setW1] = useState("");
@@ -197,7 +197,7 @@ function StopsData(){
     //Kirthi
     const getPlan = (eventblah) => {
         eventblah.preventDefault()
-
+        setWeather1([{"temp" : "blah", "prec" : "blah", "wind" : "blah"}])
         //calculations will go here.
         //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
@@ -214,6 +214,7 @@ function StopsData(){
         //when user is at end:
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
 
+        
         getWeather(end, t3, 4)
         setDisp1(start + " at " + time);
         setW1(weather1.temp + " F, " + "P: " + weather1.prec + " %,  " + "W: " + weather1.wind + " mph");
@@ -317,13 +318,13 @@ function StopsData(){
                //INSTEAD OF RETURNING: setting the const values to the corresponding weather data
                if (temperature != null && precipitation != null && windSpeed != null) {
                if (point == 1) {
-                setWeather1(temperature, precipitation, windSpeed)
+                setWeather1({temperature, precipitation, windSpeed})
                } else if (point == 2) {
-                setWeather2(temperature, precipitation, windSpeed)
+                setWeather2({temperature, precipitation, windSpeed})
                } else if (point == 3) {
-                setWeather3(temperature, precipitation, windSpeed)
+                setWeather3({temperature, precipitation, windSpeed})
                } else if (point == 4){
-                setWeather4(temperature, precipitation, windSpeed)
+                setWeather4({temperature, precipitation, windSpeed})
                }
             }
             //commented to test WeatherInfo
