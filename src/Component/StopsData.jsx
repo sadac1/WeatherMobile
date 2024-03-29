@@ -313,6 +313,16 @@ function StopsData(){
         const formattedHours = new Date(hours * 3600 * 1000).toISOString().substring(11, 16);
         return formattedHours;
     }
+
+    //converting time to ISO so it can be used for API call
+    const convertTimeToISO = (selectedTime) => {
+        if (!selectedTime) {
+            return null;
+        }
+        const isoTime = moment(selectedTime).toISOString();
+        return isoTime;
+    };
+    
     //display all
     /*
                 <input type="text" value={time} onChange={handleChangeTime}/>
