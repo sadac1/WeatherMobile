@@ -255,7 +255,7 @@ function StopsData(){
        // const fetch = require('node-fetch');
 
        const getWeather = async (loc, time) => {
-            /* //commented to test WeatherINfo
+
            const apiKey = 'iLXXcJ7nO1Fmt3HBdaVrc10IEN7Fl0I9'; // Ensure the API key is a string
            const location = loc; // Location format should be "lat,long"
            const units = 'metric';
@@ -279,15 +279,15 @@ function StopsData(){
                const temperature = interval.temperature; // Temperature
                const precipitation = interval.precipitationIntensity; // Precipitation intensity
                const windSpeed = interval.windSpeed; // Wind speed
-               */ //comment to test WeatherInfo
+               
                // Returning an array with the requested values
                //return [temperature, precipitation, windSpeed]; << bring this back once it's confirmed that code works
                return [1, 2, 3];
             //commented to test WeatherInfo
-           /*} catch (error) {
+           } catch (error) {
                console.error('There was an error fetching the weather data:', error);
                return []; // Return an empty array or suitable defaults in case of error
-           }*/
+           }
        };
 
     //Sada
