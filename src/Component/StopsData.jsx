@@ -180,7 +180,9 @@ function StopsData(){
     //This is where results will be coded.
 
     //Kirthi
-    const getPlan = () => {
+    const getPlan = (eventblah) => {
+        eventblah.preventDefault()
+
         //calculations will go here.
         //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
@@ -197,25 +199,6 @@ function StopsData(){
         console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
         //displays all the weather as textboxes
         //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
-        return (
-            <>
-            <div>
-                <WeatherInfo location_ = {start} time_ = {time} weather = {getWeather(start, time)} />
-            </div>
-            <br></br>
-            <div>
-                <WeatherInfo location_ = {stop1} time_ = {t2} weather = {getWeather(stop1, t2)} />
-            </div>
-            <br></br>
-            <div>
-                <WeatherInfo location_ = {stop2} time_ = {t3} weather = {getWeather(stop2, t3)} />
-            </div>
-            <br></br>
-            <div>
-                <WeatherInfo location_ = {end} time_ = {t4} weather = {getWeather(end, t4)} />
-            </div>
-            </>
-        );
     }
     /* getTimeToTravel
     Takes in two locations
@@ -272,6 +255,7 @@ function StopsData(){
        // const fetch = require('node-fetch');
 
        const getWeather = async (loc, time) => {
+            /* //commented to test WeatherINfo
            const apiKey = 'iLXXcJ7nO1Fmt3HBdaVrc10IEN7Fl0I9'; // Ensure the API key is a string
            const location = loc; // Location format should be "lat,long"
            const units = 'metric';
@@ -295,14 +279,15 @@ function StopsData(){
                const temperature = interval.temperature; // Temperature
                const precipitation = interval.precipitationIntensity; // Precipitation intensity
                const windSpeed = interval.windSpeed; // Wind speed
-      
+               */ //comment to test WeatherInfo
                // Returning an array with the requested values
                //return [temperature, precipitation, windSpeed]; << bring this back once it's confirmed that code works
-               return [1, 2, 3]
-           } catch (error) {
+               return [1, 2, 3];
+            //commented to test WeatherInfo
+           /*} catch (error) {
                console.error('There was an error fetching the weather data:', error);
                return []; // Return an empty array or suitable defaults in case of error
-           }
+           }*/
        };
 
     //Sada
@@ -331,7 +316,7 @@ function StopsData(){
     return (<>
         <h2>{statement}</h2>
         <div>
-            <form onSubmit = {handleSubmitGetPlan} /*onClick = {handleClick}*/>
+            <form onSubmit = {getPlan} /*onClick = {handleClick}*/>
                 <div>
                         <label>Start Time:</label>
                         <DatePicker
@@ -371,7 +356,21 @@ function StopsData(){
         </div>
         <h2>Happy Travels!</h2>
         <div>
-            <getPlan/>
+            <div>
+                <WeatherInfo location_ = {start} time_ = {time} weather = {getWeather(start, time)} />
+            </div>
+            <br></br>
+            <div>
+                <WeatherInfo location_ = {stop1} time_ = {t2} weather = {getWeather(stop1, t2)} />
+            </div>
+            <br></br>
+            <div>
+                <WeatherInfo location_ = {stop2} time_ = {t3} weather = {getWeather(stop2, t3)} />
+            </div>
+            <br></br>
+            <div>
+                <WeatherInfo location_ = {end} time_ = {t4} weather = {getWeather(end, t4)} />
+            </div>           
             <br></br>
             <br></br>
             <button>Download Plan</button>
