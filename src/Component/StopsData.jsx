@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 //import Form from 'react-bootstrap/Form';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import WeatherInfo from './WeatherInfo';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
@@ -37,10 +37,10 @@ function StopsData(){
     const [t4, setT4] = useState("")
 
 //weather at start, stop1, stop2, end
-    const [weather1, setWeather1] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
-    const [weather2, setWeather2] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
-    const [weather3, setWeather3] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
-    const [weather4, setWeather4] = useState([{"temp" : "t", "prec" : "p","wind" : "w"}])
+    const [weather1, setWeather1] = useState({temp : "t", prec : "p",wind : "w"});
+    const [weather2, setWeather2] = useState({temp : "t", prec : "p",wind : "w"});
+    const [weather3, setWeather3] = useState({temp : "t", prec : "p",wind : "w"});
+    const [weather4, setWeather4] = useState({temp : "t", prec : "p",wind : "w"});
 
     const [disp1, setDisp1] = useState("");
     const [w1, setW1] = useState("");
@@ -194,28 +194,32 @@ function StopsData(){
      */
     //This is where results will be coded.
 
+    /*useEffect(() => {
+        setWeather1([{ temp : "blah", prec : "blah", wind : "blah"}]);
+    }, []);*/
+
     //Kirthi
     const getPlan = (eventblah) => {
         eventblah.preventDefault()
-        setWeather1([{"temp" : "blah", "prec" : "blah", "wind" : "blah"}])
+        //setWeather1([{"temp" : "blah", "prec" : "blah", "wind" : "blah"}])
         //calculations will go here.
         //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
         //when user is at stop1:
         getWeather(start, time, 1)
-
+        console.log("eather 1 is " + weather1.prec);
         setT2(addTime(time, getTimeToTravel(start, stop1)))
         
-        getWeather(stop1, t2, 2)
+        //getWeather(stop1, t2, 2)
         //when user is at stop2:
         setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
     
-        getWeather(stop2, t3, 3)
+        //getWeather(stop2, t3, 3)
         //when user is at end:
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
 
-        
-        getWeather(end, t3, 4)
+        console.log("Weather 1 is " + weather1);
+        //getWeather(end, t3, 4)
         setDisp1(start + " at " + time);
         setW1(weather1.temp + " F, " + "P: " + weather1.prec + " %,  " + "W: " + weather1.wind + " mph");
 
@@ -229,7 +233,7 @@ function StopsData(){
         setW4(weather4[0]+ " F, " + "P: " + weather4.prec + " %,  " + "W: " + weather4.wind + " mph");
 
         console.log(getTimeToTravel(start, stop1))
-        console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
+        //console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
         //displays all the weather as textboxes
         //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
     }
@@ -318,13 +322,13 @@ function StopsData(){
                //INSTEAD OF RETURNING: setting the const values to the corresponding weather data
                if (temperature != null && precipitation != null && windSpeed != null) {
                if (point == 1) {
-                setWeather1({temperature, precipitation, windSpeed})
+                setWeather1({temp: temperature, prec: precipitation, wind: windSpeed})
                } else if (point == 2) {
-                setWeather2({temperature, precipitation, windSpeed})
+                setWeather2({temp: temperature, prec: precipitation, wind: windSpeed})
                } else if (point == 3) {
-                setWeather3({temperature, precipitation, windSpeed})
+                setWeather3({temp: temperature, prec: precipitation, wind: windSpeed})
                } else if (point == 4){
-                setWeather4({temperature, precipitation, windSpeed})
+                setWeather4({temp: temperature, prec: precipitation, wind: windSpeed})
                }
             }
             //commented to test WeatherInfo
@@ -332,6 +336,7 @@ function StopsData(){
                console.error('There was an error fetching the weather data:', error);
                //return [2, 4, 6]; // Return an empty array or suitable defaults in case of error
            }
+        
        };
 
     //Sada
