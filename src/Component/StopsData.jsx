@@ -216,16 +216,16 @@ function StopsData(){
 
         getWeather(end, t3, 4)
         setDisp1(start + " at " + time);
-        setW1(weather1.temp + "F, " + "P: " + weather1.prec + "%,  " + "W: " + weather1.wind + "mph");
+        setW1(weather1.temp + " F, " + "P: " + weather1.prec + " %,  " + "W: " + weather1.wind + " mph");
 
         setDisp2(stop1 + " at " + t2);
-        setW2(weather2.temp + "F, " + "P: " + weather2.prec + "%,  " + "W: " + weather2.wind + "mph");
+        setW2(weather2.temp + " F, " + "P: " + weather2.prec + " %,  " + "W: " + weather2.wind + " mph");
 
         setDisp3(stop2 + " at " + t3);
-        setW3(weather3.temp + "F, " + "P: " + weather3.prec + "%,  " + "W: " + weather3.wind + "mph");
+        setW3(weather3.temp + " F, " + "P: " + weather3.prec + " %,  " + "W: " + weather3.wind + " mph");
 
         setDisp4(end + " at " + t4);
-        setW4(weather4[0]+ "F, " + "P: " + weather4.prec + "%,  " + "W: " + weather4.wind + "mph");
+        setW4(weather4[0]+ " F, " + "P: " + weather4.prec + " %,  " + "W: " + weather4.wind + " mph");
 
         console.log(getTimeToTravel(start, stop1))
         console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
