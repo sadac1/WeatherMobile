@@ -206,17 +206,22 @@ function StopsData(){
         //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
         //when user is at stop1:
-        getWeather(start, time, 1)
+        const isoTime = convertTimeToISO(time);
+        getWeather(start, isoTime, 1)
         console.log("eather 1 is " + weather1.prec);
         setT2(addTime(time, getTimeToTravel(start, stop1)))
         
-        //getWeather(stop1, t2, 2)
+        getWeather(stop1, isoTime, 2)
         //when user is at stop2:
         setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
     
-        //getWeather(stop2, t3, 3)
+        getWeather(stop2, isoTime, 3)
         //when user is at end:
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
+
+       // getWeather(end, isoTime, 4)
+        //when user is at end:
+     //   setT4(addTime(t4, getTimeToTravel(end, end)))
 
         console.log("Weather 1 is " + weather1);
         //getWeather(end, t3, 4)
