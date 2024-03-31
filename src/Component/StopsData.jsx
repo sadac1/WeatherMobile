@@ -233,6 +233,7 @@ function StopsData(){
         setT2(addTime(isoTime, getTimeToTravel(start, stop1)))
         
         const isoTime2 = convertTimeToISO(t2);
+        console.log("time: " + time, "isoTime", isoTime)
         getWeather(stop1, isoTime2, 2)
         //when user is at stop2:
         setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
@@ -394,7 +395,6 @@ function StopsData(){
     const convertTimeToISO = (selectedTime) => {
         console.log("in convertTimeToISO: selected time is " + selectedTime)
         if (!selectedTime) {
-            
             return null;
         }
         const isoTime = moment(selectedTime).toISOString();
