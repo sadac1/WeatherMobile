@@ -293,7 +293,7 @@ function StopsData(){
         console.log("miles: " , miles)
         console.log("Time to travel should be:", miles/MPH)
        //console.log("miles " + Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * m);
-       return miles / MPH + 0.5
+       return miles / MPH 
     }
 
     /* addTime
