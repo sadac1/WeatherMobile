@@ -297,7 +297,7 @@ function StopsData(){
        // const fetch = require('node-fetch');
 
        const getWeather = async (loc, time, point) => {
-
+/*
            const apiKey = 'iLXXcJ7nO1Fmt3HBdaVrc10IEN7Fl0I9'; // Ensure the API key is a string
            const location = loc; // Location format should be "lat,long"
            const units = 'metric';
@@ -341,7 +341,7 @@ function StopsData(){
                console.error('There was an error fetching the weather data:', error);
                //return [2, 4, 6]; // Return an empty array or suitable defaults in case of error
            }
-        
+        */
        };
 
     //Sada
