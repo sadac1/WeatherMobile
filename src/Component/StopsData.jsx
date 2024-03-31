@@ -31,6 +31,8 @@ function StopsData(){
     const [stop2, setStop2] = useState("Stop");
     const [end, setEnd] = useState("End Location");
 
+    const [timeAtStop, setTimeAtStop] = useState(0.5);
+
 //Time of arrival at stop 1, stop 2, end
     const [t2, setT2] = useState("")
     const [t3, setT3] = useState("")
@@ -168,7 +170,7 @@ function StopsData(){
         setShowStop(true)
     }
 
-    const statement = 'DESCRIBE YOUR JOURNEY';
+    const statement = 'Describe Your Journey';
 
     //Not being used right now
     //currently button to add the stop doesn't work, so the stop is just going to be there already.
@@ -181,7 +183,7 @@ function StopsData(){
     }
     
     //Following is for dummy data lol if we can't use API. Will multiply this by distance. 
-    const MPH = 60
+    const MPH = 70
 
     /*
     Tasks: 
@@ -198,6 +200,7 @@ function StopsData(){
         setWeather1([{ temp : "blah", prec : "blah", wind : "blah"}]);
     }, []);*/
 
+
     //Kirthi
     const getPlan = (eventblah) => {
         eventblah.preventDefault()
@@ -206,10 +209,13 @@ function StopsData(){
         //setPlan(start + " is super sunny! Good for you <3")
         //following are the times when user will be at each location
         //when user is at stop1:
+        //console.log("time: " + time, "isoTime", isoTime)
+        //setTime(addTime(time, 0))
         const isoTime = convertTimeToISO(time);
+        console.log("time: " + time, "isoTime", isoTime)
         getWeather(start, isoTime, 1)
         console.log("eather 1 is " + weather1.prec);
-        setT2(addTime(time, getTimeToTravel(start, stop1)))
+        setT2(addTime(isoTime, getTimeToTravel(start, stop1)))
         
         getWeather(stop1, isoTime, 2)
         //when user is at stop2:
@@ -219,25 +225,25 @@ function StopsData(){
         //when user is at end:
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
 
-       // getWeather(end, isoTime, 4)
+        getWeather(end, isoTime, 4)
         //when user is at end:
      //   setT4(addTime(t4, getTimeToTravel(end, end)))
 
         console.log("Weather 1 is " + weather1);
         //getWeather(end, t3, 4)
-        setDisp1(start + " at " + time);
+        setDisp1("Leaving from " + start + " at: " + isoTime.substring(11,16));
         setW1(weather1.temp + " F, " + "P: " + weather1.prec + " %,  " + "W: " + weather1.wind + " mph");
 
-        setDisp2(stop1 + " at " + t2);
+        setDisp2("Reaching " + stop1 + " at: " + t2.substring(11,16));
         setW2(weather2.temp + " F, " + "P: " + weather2.prec + " %,  " + "W: " + weather2.wind + " mph");
 
-        setDisp3(stop2 + " at " + t3);
+        setDisp3("Reaching " + stop2 + " at: " + t3.substring(11,16));
         setW3(weather3.temp + " F, " + "P: " + weather3.prec + " %,  " + "W: " + weather3.wind + " mph");
 
-        setDisp4(end + " at " + t4);
-        setW4(weather4[0]+ " F, " + "P: " + weather4.prec + " %,  " + "W: " + weather4.wind + " mph");
+        setDisp4("Reaching " + end + " at: " + t4.substring(11,16));
+        setW4(weather4.temp+ " F, " + "P: " + weather4.prec + " %,  " + "W: " + weather4.wind + " mph");
 
-        console.log(getTimeToTravel(start, stop1))
+        //console.log(getTimeToTravel(start, stop1))
         //console.log(getWeather('Chicago', '2024-03-27T23:22:00Z')) // test this
         //displays all the weather as textboxes
         //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
@@ -253,7 +259,7 @@ function StopsData(){
         //distance between two locs: =acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371 
         
         //const dummy = JSON.parse('DummyData.json')
-        console.log(dummyData)
+        //console.log(dummyData)
     /*
         dist = ...
 
@@ -274,9 +280,20 @@ function StopsData(){
                 l2_lon = dummyData[i].longitude;
             }
         }
-       //return Math.sqrt((l2_lat - l1_lat) * (l2_lat - l1_lat) + (l2_lon - l1_lon) * (l2_lon - l1_lon)) / MPH;
-       //return Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * 3958.756 / MPH;
-       return Math.sqrt((l2_lat - l1_lat) * (l2_lat - l1_lat) + (l2_lon - l1_lon) * (l2_lon - l1_lon)) / MPH
+        const m = 3958.756
+        const strangeDif = 57.50501
+        console.log(l1_lat, " ", l2_lat, " ", l1_lon, " ", l2_lon)
+        const dif1 = l2_lat - l1_lat
+        const dif2 = l2_lon - l1_lon
+        const a = Math.sin(dif1/2) * Math.sin(dif1/2) + 
+                    Math.cos(l1_lat) * Math.cos(l2_lat) *
+                     Math.sin(dif2/2) * Math.sin(dif2/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+        const miles = m * c / strangeDif 
+        console.log("miles: " , miles)
+        console.log("Time to travel should be:", miles/MPH)
+       //console.log("miles " + Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * m);
+       return miles / MPH + 0.5
     }
 
     /* addTime
@@ -284,10 +301,12 @@ function StopsData(){
     Adds both times and returns new time as (hours as decimal)
     */
     const addTime = (time1, timeToTravel) => {
+        console.log("inputs to time1 and time to travel : " + time1 + " " + timeToTravel)
         //return time1 + timetoTravel (this will have to be formatted properly)
-        let timeToTravelInHours = helperGetHoursFormatted(timeToTravel);
+        //let timeToTravelInHours = helperGetHoursFormatted(timeToTravel);
         //time1 is already formatted, so now add two new and then send.
-        return time1;
+        console.log("hope this works " + new Date(new Date(time1).getTime() + timeToTravel * 60 * 60 * 1000).toISOString())
+        return new Date(new Date(time1).getTime() + timeToTravel * 60 * 60 * 1000).toISOString();
     }
 
     //Bavya
@@ -296,7 +315,7 @@ function StopsData(){
         //please return a array with [temperature, precipitation, windspeed]
        // const fetch = require('node-fetch');
 
-       const getWeather = async (loc, time, point) => {
+       const getWeather = async (loc, time1, point) => {
 /*
            const apiKey = 'iLXXcJ7nO1Fmt3HBdaVrc10IEN7Fl0I9'; // Ensure the API key is a string
            const location = loc; // Location format should be "lat,long"
@@ -304,7 +323,7 @@ function StopsData(){
            const fields = ['temperature', 'precipitationIntensity', 'windSpeed']; // Adjusted fields to include
       
            // Assuming 'time' is a specific hour in ISO format (e.g., "2024-03-27T05:00:00Z")
-           const startTime = time;
+           const startTime = time1;
            const endTime = new Date(new Date(time).getTime() + 60*60*1000).toISOString(); // Adds 1 hour to start time
       
            const url = `https://api.tomorrow.io/v4/timelines?apikey=${apiKey}&location=${location}&fields=${fields.join(',')}&units=${units}&timesteps=current&startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}`;
@@ -355,7 +374,9 @@ function StopsData(){
 
     //converting time to ISO so it can be used for API call
     const convertTimeToISO = (selectedTime) => {
+        console.log("in convertTimeToISO: selected time is " + selectedTime)
         if (!selectedTime) {
+            
             return null;
         }
         const isoTime = moment(selectedTime).toISOString();
@@ -374,6 +395,7 @@ function StopsData(){
                 <div>
                         <label>Start Time:</label>
                         <DatePicker
+                            className= "input-field"
                             selected={time}
                             onChange={handleChangeTime}
                             showTimeSelect
@@ -387,6 +409,7 @@ function StopsData(){
                     <div>
                         <label>Start Date:</label>
                         <DatePicker
+                            className= "input-field"
                             selected={startDate}
                             onChange={handleChangeStartDate}
                             dateFormat="MMMM d, yyyy"
@@ -394,39 +417,39 @@ function StopsData(){
                         />
                     </div>
 
-                <input type="text" value={start} onChange={handleChangeStart}/>
+                <input className = "input-field" type="text" value={start} onChange={handleChangeStart}/>
                 <br></br>
-                <input type = "text" value = {stop1} onChange = {handleChangeStop1}/>
+                <input className = "input-field" type = "text" value = {stop1} onChange = {handleChangeStop1}/>
                 <br></br>
-                <input type = "text" value = {stop2} onChange = {handleChangeStop2}/>
+                <input className = "input-field"mtype = "text" value = {stop2} onChange = {handleChangeStop2}/>
                 <br></br>
-                <input type="text" value={end} onChange={handleChangeEnd}/>
+                <input className = "input-field" type="text" value={end} onChange={handleChangeEnd}/>
                 <br></br>
                 <br></br>
-                <input type="submit" value = "Get Plan!"/>
+                <input className = "get-plan" type="submit" value = "Get Plan!" style={{width: "75px", height: "30px"}}/>
                 <br></br>
                 <br></br>
             </form>
         </div>
         <h2>Happy Travels!</h2>
         <div>
-            <input type="text" value={disp1} readOnly = {true} style={{width: "370px", height: "50px"}}/>
-            <input type="text" value={w1} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={disp1} readOnly = {true} style={{width: "200px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={w1} readOnly = {true} style={{width: "200px", height: "50px"}}/>
             <br></br>
             <br></br>
-            <input type="text" value={disp2} readOnly = {true} style={{width: "370px", height: "50px"}}/>
-            <input type="text" value={w2} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={disp2} readOnly = {true} style={{width: "200px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={w2} readOnly = {true} style={{width: "200px", height: "50px"}}/>
             <br></br>
             <br></br>
-            <input type="text" value={disp3} readOnly = {true} style={{width: "370px", height: "50px"}}/>
-            <input type="text" value={w3} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={disp3} readOnly = {true} style={{width: "200px", height: "50px"}}/>
+            <input className = "output-box"type="text" value={w3} readOnly = {true} style={{width: "200px", height: "50px"}}/>
             <br></br>
             <br></br>
-            <input type="text" value={disp4} readOnly = {true} style={{width: "370px", height: "50px"}}/>
-            <input type="text" value={w4} readOnly = {true} style={{width: "370px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={disp4} readOnly = {true} style={{width: "200px", height: "50px"}}/>
+            <input className = "output-box" type="text" value={w4} readOnly = {true} style={{width: "200px", height: "50px"}}/>
             <br></br>
             <br></br>
-            <button>Download Plan</button>
+            
         </div>
     </>);
 
@@ -434,6 +457,10 @@ function StopsData(){
 }
 
 export default StopsData;
+
+
+//<button>Download Plan</button> <- for when we do downloading implementation
+
 //export default class StopsData extends Component 
 /*
 

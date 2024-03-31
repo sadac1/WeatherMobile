@@ -46,3 +46,15 @@
   width:200px;
   background:linear-gradient(hsl(194, 80%, 43%),hsl(176, 100%, 87%) );
 }
+
+.input-field{
+  background-color: #2b1586;
+}
+
+.output-box{
+  background-color: #2b1586;
+}
+
+.get-plan{
+  background-color: hsl(194, 80%, 43%);
+}
