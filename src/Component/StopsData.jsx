@@ -102,6 +102,21 @@ function StopsData(){
             "latitude": 41.525
         },
         {
+            "location": "New York", 
+            "longitude": -74.007205, 
+            "latitude": 40.7129822
+        },
+        {
+            "location": "Dallas", 
+            "longitude": -96.7955954, 
+            "latitude": 32.7755679
+        },
+        {
+            "location": "Austin", 
+            "longitude": -97.7475016, 
+            "latitude": 30.2642643
+        },
+        {
             "location": "Decatur", 
             "longitude": -88.9548, 
             "latitude": 39.8403
@@ -217,21 +232,24 @@ function StopsData(){
         console.log("eather 1 is " + weather1.prec);
         setT2(addTime(isoTime, getTimeToTravel(start, stop1)))
         
-        getWeather(stop1, isoTime, 2)
+        const isoTime2 = convertTimeToISO(t2);
+        getWeather(stop1, isoTime2, 2)
         //when user is at stop2:
         setT3(addTime(t2, getTimeToTravel(stop1, stop2)))
     
-        getWeather(stop2, isoTime, 3)
+        const isoTime3 = convertTimeToISO(t3);
+        getWeather(stop2, isoTime3, 3)
         //when user is at end:
         setT4(addTime(t3, getTimeToTravel(stop2, end)))
 
-        getWeather(end, isoTime, 4)
+        const isoTime4 = convertTimeToISO(end);
+        getWeather(end, isoTime4, 4)
         //when user is at end:
      //   setT4(addTime(t4, getTimeToTravel(end, end)))
 
         console.log("Weather 1 is " + weather1);
         //getWeather(end, t3, 4)
-        setDisp1("Leaving from " + start + " at: " + isoTime.substring(11,16));
+        setDisp1("Leaving from " + start + " at: " + time.substring(11,16));
         setW1(weather1.temp + " F, " + "P: " + weather1.prec + " %,  " + "W: " + weather1.wind + " mph");
 
         setDisp2("Reaching " + stop1 + " at: " + t2.substring(11,16));
@@ -293,7 +311,7 @@ function StopsData(){
         console.log("miles: " , miles)
         console.log("Time to travel should be:", miles/MPH)
        //console.log("miles " + Math.acos(Math.sin(l1_lat) * Math.sin(l2_lat) + Math.cos(l1_lat)*Math.cos(l2_lat)*Math.cos(l2_lon - l1_lon)) * m);
-       return miles / MPH 
+       return miles / MPH;
     }
 
     /* addTime
