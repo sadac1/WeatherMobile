@@ -23,6 +23,7 @@ function StopsData(){
     // useState("estimated start time") <- inside quotes is the default thing that shows. You can see it with npm run dev.
     const [time, setTime] = useState(null); // Change to null since we're using time
     const [startDate, setStartDate] = useState(null); // Change to null since we're using date
+    const [endDate, setEndDate] = useState(null);
     /*const [time, setTime] = useState("Estimated Start Time");
     const [startDate, setStartDate] = useState("Estimated Start Date");
     */
@@ -157,9 +158,20 @@ function StopsData(){
         setTime(selectedTime);
     };
 
+    //handling change of the start and end date
     const handleChangeStartDate = (selectedDate) => {
         setStartDate(selectedDate);
+        if(endDate && moment(selectedDate).isAfter(endDate)) {
+            setEndDate(null);
+        }
     };
+    //const handleChangeEndDate = (selectedDate) => {
+        //setEndDate(selectedDate);
+    //};
+
+    //set the Max date user could pick to be 10 days from the current date 
+    const maxDate = moment().add(10,'days').toDate();
+
     /*const handleChangeTime = (event1) => {
         setTime(event1.target.value)
     }
@@ -432,8 +444,12 @@ function StopsData(){
                             onChange={handleChangeStartDate}
                             dateFormat="MMMM d, yyyy"
                             placeholderText="Select Start Date"
+                            minDate = {moment().toDate()}
+                            maxDate = {maxDate}
                         />
                     </div>
+                   
+                     
 
                 <input className = "input-field" type="text" value={start} onChange={handleChangeStart}/>
                 <br></br>
