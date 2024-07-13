@@ -346,6 +346,55 @@ function StopsData(){
         //please return a array with [temperature, precipitation, windspeed]
        // const fetch = require('node-fetch');
 
+       const getWeather = async (city, state, point, targetDate, targetHour) => {
+        const apiKey = 'c82b9efa66f4437897f653ba94d67e82'; // Ensure the API key is a string
+    
+        // Construct the URL for the Weatherbit hourly forecast API
+        const url = `https://api.weatherbit.io/v2.0/forecast/hourly?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}&key=${apiKey}&include=minutely,alerts`;
+    
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok (${response.statusText})`);
+            }
+            const data = await response.json();
+    
+            // Format the target date
+            const targetDateString = new Date(targetDate).toISOString().split('T')[0];
+    
+            // Filter the forecast for the specified hour on the target date
+            const targetForecast = data.data.find(hourlyData => {
+                const dateTime = new Date(hourlyData.timestamp_local);
+                return dateTime.getHours() === targetHour && dateTime.toISOString().split('T')[0] === targetDateString;
+            });
+    
+            if (targetForecast) {
+                const temperature = targetForecast.temp; // Temperature
+                const precipitation = targetForecast.precip; // Precipitation intensity
+                const windSpeed = targetForecast.wind_spd; // Wind speed
+    
+                // Setting the weather data based on the point parameter
+                if (temperature != null && precipitation != null && windSpeed != null) {
+                    if (point == 1) {
+                        setWeather1({ temp: temperature, prec: precipitation, wind: windSpeed });
+                    } else if (point == 2) {
+                        setWeather2({ temp: temperature, prec: precipitation, wind: windSpeed });
+                    } else if (point == 3) {
+                        setWeather3({ temp: temperature, prec: precipitation, wind: windSpeed });
+                    } else if (point == 4) {
+                        setWeather4({ temp: temperature, prec: precipitation, wind: windSpeed });
+                    }
+                }
+            } else {
+                console.log(`No forecast data available for ${targetDate} at ${targetHour}:00.`);
+            }
+        } catch (error) {
+            console.error('There was an error fetching the weather data:', error);
+        }
+    };
+    
+    
+    /*
        const getWeather = async (loc, time1, point) => {
 
            const apiKey = 'HIZLo88fMphbEk7JJJlcwLcnvRVbBMjp'; // Ensure the API key is a string
@@ -393,6 +442,7 @@ function StopsData(){
            }
         
        };
+       */
 
     //Sada
     // Takes in hours as a decimal, returns as a string
