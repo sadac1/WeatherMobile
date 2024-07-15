@@ -365,7 +365,7 @@ const getCoordinates = async (cityName) => {
         }
         const data = await response.json();
         if (data.results.length > 0) {
-            const { lat, lng } = data.results[0].geometry;
+            const { lat, lng } = data.results[0].geometry; // Latitude and longitude in decimal degrees
             return { lat, lng };
         } else {
             throw new Error('Location not found');
@@ -375,6 +375,7 @@ const getCoordinates = async (cityName) => {
         return null;
     }
 };
+
 
 
 const getTravelInfo = async (startCity, endCity) => {
@@ -399,10 +400,13 @@ const getTravelInfo = async (startCity, endCity) => {
         }
 
         const route = data.routes[0];
-        return {
-            distance: route.distance, // Distance in meters
-            duration: route.duration  // Duration in seconds
-        };
+        const durationInSeconds = route.duration;
+
+        // Convert the duration to the desired format
+        const formattedDuration = convertTime(durationInSeconds);
+
+        // Return only the formatted duration
+        return formattedDuration;
     } catch (error) {
         console.error('Error fetching travel info:', error);
         return null;
