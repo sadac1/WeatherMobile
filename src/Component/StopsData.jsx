@@ -346,6 +346,70 @@ function StopsData(){
         //please return a array with [temperature, precipitation, windspeed]
        // const fetch = require('node-fetch');
 
+
+       /*
+        Open Cage API this is to convert City Name's and State ID's into Latitude and Longitude for OSRM
+        API to use
+       */
+        const fetch = require('node-fetch'); // Ensure you have node-fetch installed
+
+// Function to fetch coordinates from OpenCage Geocoding API
+const getCoordinates = async (cityName) => {
+    const apiKey = 'e66c4cbe3e0c429c94fa41294f238339'; // Replace with your OpenCage API key
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(cityName)}&key=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Network response was not ok (${response.statusText})`);
+        }
+        const data = await response.json();
+        if (data.results.length > 0) {
+            const { lat, lng } = data.results[0].geometry;
+            return { lat, lng };
+        } else {
+            throw new Error('Location not found');
+        }
+    } catch (error) {
+        console.error('Error fetching coordinates:', error);
+        return null;
+    }
+};
+
+
+const getTravelInfo = async (startCity, endCity) => {
+    const startCoords = await getCoordinates(startCity);
+    const endCoords = await getCoordinates(endCity);
+
+    if (!startCoords || !endCoords) {
+        console.error('Error fetching coordinates for one or both cities');
+        return;
+    }
+
+    const url = `http://router.project-osrm.org/route/v1/driving/${startCoords.lng},${startCoords.lat};${endCoords.lng},${endCoords.lat}?overview=false`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Network response was not ok (${response.statusText})`);
+        }
+        const data = await response.json();
+        if (data.code !== 'Ok') {
+            throw new Error(`Error from OSRM API: ${data.message}`);
+        }
+
+        const route = data.routes[0];
+        return {
+            distance: route.distance, // Distance in meters
+            duration: route.duration  // Duration in seconds
+        };
+    } catch (error) {
+        console.error('Error fetching travel info:', error);
+        return null;
+    }
+};
+
+
        const getWeather = async (city, state, point, targetDate, targetHour) => {
         const apiKey = 'c82b9efa66f4437897f653ba94d67e82'; // Ensure the API key is a string
     
