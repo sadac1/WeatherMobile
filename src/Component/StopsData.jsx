@@ -413,6 +413,39 @@ const getTravelInfo = async (startCity, endCity) => {
     }
 };
 
+const convertTime = (seconds) => {
+    // Convert seconds to hours and minutes
+    const hours = Math. floor(seconds /3600);
+    const minutes = Math. floor((seconds % 3600)/60);
+
+
+    if (time) {
+        const [t, modifier] = time.split(' ');
+        let [h, m] = t.split(':').map(Number);
+        
+        // Convert 12-hour format to 24-hour format
+        if (modifier === 'PM' && h !== 12) {
+            h += 12;
+        } else if (modifier === 'AM' && h === 12) {
+            h = 0;
+        }
+
+        // Optionally, update or return the modified time
+        // For example, updating hours and minutes based on seconds
+        h += hours;
+        m += minutes;
+        // Adjust minutes if they exceed 59
+        if (m >= 60) {
+            m -= 60;
+            h += 1;
+        }
+        time = h + ": " + m; //this is wrong
+        return  h + ": " + m;
+    }
+    return  hours + ": " + minutes;
+};
+    
+
 
        const getWeather = async (city, state, point, targetDate, targetHour) => {
         const apiKey = 'c82b9efa66f4437897f653ba94d67e82'; // Ensure the API key is a string
