@@ -5,6 +5,7 @@ sake, putting the second part in StopsData as well. Maybe can split it up later 
 readability.
  */ 
 
+/*
 import React, {Component} from 'react';
 import {useState} from 'react';
 import StopsData from './StopsData';
@@ -42,3 +43,4 @@ const WeatherInfo = (props) => {
 }
 
 export default WeatherInfo;
+*/
