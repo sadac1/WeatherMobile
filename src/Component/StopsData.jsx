@@ -221,7 +221,7 @@ const getTravelInfo = async (startCity, endCity) => {
         return null;
     }
 };
-
+//this function is going to convert the seconds it takes from one location to the other to a 12hour format and add it to time set by the user 
 const convertTime = (seconds) => {
     // Convert seconds to hours and minutes
     const hours = Math. floor(seconds /3600);
@@ -229,7 +229,8 @@ const convertTime = (seconds) => {
 
 
     if (time) {
-        const [t, modifier] = time.split(' ');
+        //current time in 12 hour format
+        let [t, modifier] = time.split(' ');
         let [h, m] = t.split(':').map(Number);
         
         // Convert 12-hour format to 24-hour format
@@ -238,20 +239,35 @@ const convertTime = (seconds) => {
         } else if (modifier === 'AM' && h === 12) {
             h = 0;
         }
-
-        // Optionally, update or return the modified time
-        // For example, updating hours and minutes based on seconds
+        //add travel time to current time 
         h += hours;
         m += minutes;
-        // Adjust minutes if they exceed 59
+
+        // Adjust time if needed
         if (m >= 60) {
             m -= 60;
             h += 1;
         }
-        time = h + ": " + m; //this is wrong
-        return  h + ": " + m;
+        if (h >= 24) {
+            h -= 24;
+        }
+
+        modifier = h >= 12 ? 'PM' : 'AM';
+        if (h > 12) {
+            h -= 12;
+        } else if (h === 0) {
+            h = 12;
+        }
+
+        // Format the updated time
+        const updatedTime = `${h}:${m < 10 ? '0' : ''}${m} ${modifier}`;
+        
+        // Update the state
+        setTime(updatedTime);
+
+        return updatedTime;
     }
-    return  hours + ": " + minutes;
+    return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
 };
     
 
