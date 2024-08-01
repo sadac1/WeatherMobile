@@ -1,22 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import React from 'react'
-import './App.css'
-//import 'bootstrap/dist/css/bootstrap.css'
-import StopsData from './Component/StopsData'
+import React from 'react';
+import './App.css';
+import StopsData from './Component/StopsData';
 
 function App() {
-  let name = 'Weather Mobile';
-  //let statement = 'START YOUR JOURNEY';
-  return (<>
-  <h1>{name}</h1>
-  <br></br>
-  <div> <StopsData/>
-  </div>
-  </>)
-
+  const name = 'Weather Mobile';
+  
+  return (
+    <>
+      <h1>{name}</h1>
+      <br />
+      <div>
+        <StopsData />
+      </div>
+    </>
+  );
 }
+
 
 
 /*function App() {
