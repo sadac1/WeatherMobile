@@ -167,9 +167,10 @@ function StopsData(){
       
 // Function to fetch coordinates from OpenCage Geocoding API
 // Function to fetch coordinates from OpenCage Geocoding API
-const getCoordinates = async (cityName) => {
+const getCoordinates = async (cityName, stateID) => {
     const apiKey = 'e66c4cbe3e0c429c94fa41294f238339'; // Replace with your OpenCage API key
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(cityName)}&key=${apiKey}`;
+    const query = `${encodeURIComponent(cityName)},${encodeURIComponent(stateID)}`;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${query}&key=${apiKey}`;
 
     try {
         const response = await fetch(url);
