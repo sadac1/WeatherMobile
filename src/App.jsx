@@ -4,6 +4,7 @@ import StopsData from './Component/StopsData';
 
 function App() {
   const name = 'Weather Mobile';
+  console.log('App component rendering');
   
   return (
     <>

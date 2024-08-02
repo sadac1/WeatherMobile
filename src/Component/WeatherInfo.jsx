@@ -14,6 +14,7 @@ import StopsData from './StopsData';
 
 //props parameter needs to take in a list of data for each location
 const WeatherInfo = (props) => {
+    console.log('WeatherInfo component rendering with props:', props);
     const {location, time, weather} = props;
     //const [location, setLocation] = useState("location");
     //const [time, setTime] = useState("time");

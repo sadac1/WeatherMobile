@@ -6,6 +6,8 @@ import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment'; // Importing Moment JS
 
+
+
 /*
 const WeatherInfo = (props) => {
     const location = props.location;
@@ -17,6 +19,7 @@ const WeatherInfo = (props) => {
 
 
 function StopsData(){
+    console.log('StopsData component rendering');
     
     //these are all the variables that the user will input. 
     //in order to change the first parameter, use the second parameter. Ex. setTime(1:30) will change time to 1:30
@@ -161,7 +164,8 @@ function StopsData(){
         Open Cage API this is to convert City Name's and State ID's into Latitude and Longitude for OSRM
         API to use
        */
-        const fetch = require('node-fetch'); 
+      
+// Function to fetch coordinates from OpenCage Geocoding API
 // Function to fetch coordinates from OpenCage Geocoding API
 const getCoordinates = async (cityName) => {
     const apiKey = 'e66c4cbe3e0c429c94fa41294f238339'; // Replace with your OpenCage API key
@@ -184,8 +188,6 @@ const getCoordinates = async (cityName) => {
         return null;
     }
 };
-
-
 
 const getTravelInfo = async (startCity, endCity) => {
     const startCoords = await getCoordinates(startCity);
