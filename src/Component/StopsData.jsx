@@ -43,10 +43,10 @@ function StopsData(){
     const [t4, setT4] = useState("")
 
 //weather at start, stop1, stop2, end
-    const [weather1, setWeather1] = useState({temp : "t", prec : "p",wind : "w"});
-    const [weather2, setWeather2] = useState({temp : "t", prec : "p",wind : "w"});
-    const [weather3, setWeather3] = useState({temp : "t", prec : "p",wind : "w"});
-    const [weather4, setWeather4] = useState({temp : "t", prec : "p",wind : "w"});
+    const [weather1, setWeather1] = useState({});
+    const [weather2, setWeather2] = useState({});
+    const [weather3, setWeather3] = useState({});
+    const [weather4, setWeather4] =useState({});
 
     const [disp1, setDisp1] = useState("");
     const [w1, setW1] = useState("");
@@ -62,24 +62,34 @@ function StopsData(){
 
     //following array stores all the data from the user. These values get updated in the handleChange functions
     //Change the data struct to match the required number of stops
-    let data = [{time}, {startDate}, {start}, {stop1}, {stop2}, {end}]
+    //let data = [{time}, {startDate}, {start}, {stop1}, {stop2}, {end}]
 
     //this function console.logs the current values in data and calls getPlan, which displays the plan in the lower box.
-    const handleSubmitGetPlan = (event) => {
+    const handleSubmitGetPlan = async (event) => {
         event.preventDefault();
-        //alert(time)
-        console.log(data)
-        getPlan()
-    }
-
+    
+        try {
+            // Call getPlan with the required parameters
+            await getPlan(start, stop1, stop2, end, startDate, time);
+    
+            // Log the fetched weather data for verification
+            console.log({ weather1, weather2, weather3, weather4 });
+    
+            // Additional logic after plan creation (if needed)
+            // For example, you might want to update the UI, show a confirmation message, etc.
+        } catch (error) {
+            console.error('Error in handleSubmitGetPlan:', error);
+        }
+    };
     //Note: find out how to make the default text disappear when someone starts typing
     //Currently, this function is not being used.  
-    const handleClick = (event0) => {
+   /* const handleClick = (event0) => {
         event0.preventDefault();
         console.log("clicked")
         //[time, setTime] = useState("");
         //[start, setStart] = useState("");
     }
+    */
 
     //following handleChange functions update the textboxes to display what the user inputs
     // and update the values in the data array above : time, startDate, start, stop1, stop2, end
@@ -111,51 +121,78 @@ function StopsData(){
       };
 
     //For adding stops with plus-button click. This is not being used right now. 
-    const handlePlusButtonClick = (event7) => {
+    /*const handlePlusButtonClick = (event7) => {
         console.log("Add another stop")
         setShowStop(true)
     }
+    */
 
     const statement = 'Describe Your Journey';
 
     //Not being used right now
     //currently button to add the stop doesn't work, so the stop is just going to be there already.
-    const Stops = () => {
+    /*const Stops = () => {
         <div>
         <form>
             <input type = "text" value = {stop} onChange = {handleChangeStop1}/>
         </form>
         </div>
     }
+    */
     
-    const getPlan = (eventblah) => {
-        eventblah.preventDefault()
-       // REQUIRED PARAMETERS const getWeather = async (city, state, point, targetDate, targetHour)
-       //This is an example to update the code later
-        getWeather(start, isoTime, 1)
-        console.log("weather 1 is " + weather1.prec);
-        setT2(addTime(isoTime, getTimeToTravel(start, stop1)));
-        
-        setDisp1("Leaving from " + start + " at: " + time.substring(11,16));
-        setW1(weather1.temp + " F, " + "P: " + weather1.prec + " %,  " + "W: " + weather1.wind + " mph");
-
-        setDisp2("Reaching " + stop1 + " at: " + t2.substring(11,16));
-        setW2(weather2.temp + " F, " + "P: " + weather2.prec + " %,  " + "W: " + weather2.wind + " mph");
-
-        setDisp3("Reaching " + stop2 + " at: " + t3.substring(11,16));
-        setW3(weather3.temp + " F, " + "P: " + weather3.prec + " %,  " + "W: " + weather3.wind + " mph");
-
-        setDisp4("Reaching " + end + " at: " + t4.substring(11,16));
-        setW4(weather4.temp+ " F, " + "P: " + weather4.prec + " %,  " + "W: " + weather4.wind + " mph");
-
-        //WeatherInfo is another Component, it returns a textbox with a location and its data all formatted
-    }
-
+    const getPlan = async (start, stop1, stop2, end, startDate, time) => {
+        try {
+            const isoTime = moment(startDate).format(); // Format the date and time
+    
+            // Fetch weather and calculate times for Stop 1
+            const weatherData1 = await getWeather(start, stateId, 1, startDate, time);
+            setWeather1(weatherData1);  // Update weather1 state with fetched data
+    
+            const travelTime1 = await getTravelInfo(start, stop1);
+            const calculatedT2 = addTime(isoTime, travelTime1);
+            setT2(calculatedT2);  // Update t2 state with calculated time
+    
+            setDisp1(`Leaving from ${start} at: ${time.substring(11,16)}`);
+            setW1(`${weatherData1.temp} F, P: ${weatherData1.prec} %, W: ${weatherData1.wind} mph`);
+    
+            // Fetch weather and calculate times for Stop 2
+            const weatherData2 = await getWeather(stop1, stateId, 2, startDate, calculatedT2);
+            setWeather2(weatherData2);
+    
+            const travelTime2 = await getTravelInfo(stop1, stop2);
+            const calculatedT3 = addTime(calculatedT2, travelTime2);
+            setT3(calculatedT3);
+    
+            setDisp2(`Reaching ${stop1} at: ${calculatedT2.substring(11,16)}`);
+            setW2(`${weatherData2.temp} F, P: ${weatherData2.prec} %, W: ${weatherData2.wind} mph`);
+    
+            // Fetch weather and calculate times for Stop 3 (if applicable)
+            const weatherData3 = await getWeather(stop2, stateId, 3, startDate, calculatedT3);
+            setWeather3(weatherData3);
+    
+            const travelTime3 = await getTravelInfo(stop2, end);
+            const calculatedT4 = addTime(calculatedT3, travelTime3);
+            setT4(calculatedT4);
+    
+            setDisp3(`Reaching ${stop2} at: ${calculatedT3.substring(11,16)}`);
+            setW3(`${weatherData3.temp} F, P: ${weatherData3.prec} %, W: ${weatherData3.wind} mph`);
+    
+            // Fetch weather and display information for End Destination
+            const weatherData4 = await getWeather(end, stateId, 4, startDate, calculatedT4);
+            setWeather4(weatherData4);
+    
+            setDisp4(`Reaching ${end} at: ${calculatedT4.substring(11,16)}`);
+            setW4(`${weatherData4.temp} F, P: ${weatherData4.prec} %, W: ${weatherData4.wind} mph`);
+    
+        } catch (error) {
+            console.error('Error in getPlan:', error);
+        }
+    };
     /* addTime
     Takes in inital time (hours as decimal)
     Adds both times and returns new time as (hours as decimal)
     */
-    const addTime = (time1, timeToTravel) => {
+   /* const addTime = (time1, timeToTravel) => {
         console.log("inputs to time1 and time to travel : " + time1 + " " + timeToTravel)
         //return time1 + timetoTravel (this will have to be formatted properly)
         //let timeToTravelInHours = helperGetHoursFormatted(timeToTravel);
@@ -163,6 +200,10 @@ function StopsData(){
         console.log("hope this works " + new Date(new Date(time1).getTime() + timeToTravel * 60 * 60 * 1000).toISOString())
         return new Date(new Date(time1).getTime() + timeToTravel * 60 * 60 * 1000).toISOString();
     }
+    */
+    const addTime = (time1, timeToTravel) => {
+        return moment(time1).add(timeToTravel, 'seconds').toISOString();
+    };
 
        /*
         Open Cage API this is to convert City Name's and State ID's into Latitude and Longitude for OSRM
@@ -229,10 +270,11 @@ const getTravelInfo = async (startCity, endCity) => {
     }
 };
 //this function is going to convert the seconds it takes from one location to the other to a 12hour format and add it to time set by the user 
-const convertTime = (seconds) => {
+/*const convertTime = (seconds) => {
     // Convert seconds to hours and minutes
     const hours = Math. floor(seconds /3600);
     const minutes = Math. floor((seconds % 3600)/60);
+    
 
 
     if (time) {
@@ -276,61 +318,53 @@ const convertTime = (seconds) => {
     }
     return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
 };
+*/
+const convertTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return { hours, minutes };
+};
     
 
 
-       const getWeather = async (city, state, point, targetDate, targetHour) => {
-        const apiKey = 'c82b9efa66f4437897f653ba94d67e82'; // Ensure the API key is a string
-    
-        // Construct the URL for the Weatherbit hourly forecast API
-        const url = `https://api.weatherbit.io/v2.0/forecast/hourly?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}&key=${apiKey}&include=minutely,alerts`;
-    
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Network response was not ok (${response.statusText})`);
-            }
-            const data = await response.json();
-    
-            // Format the target date
-            const targetDateString = new Date(targetDate).toISOString().split('T')[0];
-    
-            // Filter the forecast for the specified hour on the target date
-            const targetForecast = data.data.find(hourlyData => {
-                const dateTime = new Date(hourlyData.timestamp_local);
-                return dateTime.getHours() === targetHour && dateTime.toISOString().split('T')[0] === targetDateString;
-            });
-    
-            if (targetForecast) {
-                const temperature = targetForecast.temp; // Temperature
-                const precipitation = targetForecast.precip; // Precipitation intensity
-                const windSpeed = targetForecast.wind_spd; // Wind speed
-    
-                // Setting the weather data based on the point parameter
-                if (temperature != null && precipitation != null && windSpeed != null) {
-                    if (point == 1) {
-                        setWeather1({ temp: temperature, prec: precipitation, wind: windSpeed });
-                    } else if (point == 2) {
-                        setWeather2({ temp: temperature, prec: precipitation, wind: windSpeed });
-                    } else if (point == 3) {
-                        setWeather3({ temp: temperature, prec: precipitation, wind: windSpeed });
-                    } else if (point == 4) {
-                        setWeather4({ temp: temperature, prec: precipitation, wind: windSpeed });
-                    }
-                }
-            } else {
-                console.log(`No forecast data available for ${targetDate} at ${targetHour}:00.`);
-            }
-        } catch (error) {
-            console.error('There was an error fetching the weather data:', error);
+const getWeather = async (city, state, point, targetDate, targetHour) => {
+    const apiKey = 'faed5daaf72642b5aebc57e4f90b402f'; // Ensure the API key is a string
+
+    const url = `https://api.weatherbit.io/v2.0/forecast/hourly?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}&key=${apiKey}&include=minutely,alerts`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Network response was not ok (${response.statusText})`);
         }
-    };
+        const data = await response.json();
+
+        const targetDateString = moment(targetDate).format('YYYY-MM-DD');
+
+        // Filter the forecast for the specified hour on the target date
+        const targetForecast = data.data.find(hourlyData => {
+            const dateTime = new Date(hourlyData.timestamp_local);
+            return dateTime.getHours() === targetHour && moment(dateTime).format('YYYY-MM-DD') === targetDateString;
+        });
+
+        if (targetForecast) {
+            const { temp, precip, wind_spd } = targetForecast;
+            return { temp, prec: precip, wind: wind_spd };
+        } else {
+            console.log(`No forecast data available for ${targetDate} at ${targetHour}:00.`);
+            return {};
+        }
+    } catch (error) {
+        console.error('There was an error fetching the weather data:', error);
+        return {};
+    }
+};
     
     
     return (<>
         <h2>{statement}</h2>
         <div>
-            <form onSubmit = {getPlan} /*onClick = {handleClick}*/>
+            <form onSubmit = {handleSubmitGetPlan} /*onClick = {handleClick}*/>
                 <div>
                         <label>Start Time:</label>
                         <DatePicker

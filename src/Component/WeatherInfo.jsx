@@ -14,7 +14,7 @@ import StopsData from './StopsData';
 
 //props parameter needs to take in a list of data for each location
 const WeatherInfo = (props) => {
-    console.log('WeatherInfo component rendering with props:', props);
+   /* console.log('WeatherInfo component rendering with props:', props);
     const {location, time, weather} = props;
     //const [location, setLocation] = useState("location");
     //const [time, setTime] = useState("time");
@@ -40,6 +40,31 @@ const WeatherInfo = (props) => {
             </form>
         </div>
         </>
+    );
+    */
+    const { location, time, weather } = props;
+
+    // Format the display strings
+    const formattedLocTime = `${location} at ${time}`;
+    const formattedWeatherData = `${weather.temp}F, P: ${weather.prec}%, W: ${weather.wind}mph`;
+
+    return (
+        <div>
+            <form>
+                <input 
+                    type="text" 
+                    value={formattedLocTime} 
+                    readOnly={true} 
+                    style={{width: "370px", height: "50px"}}
+                />
+                <input 
+                    type="text" 
+                    value={formattedWeatherData} 
+                    readOnly={true} 
+                    style={{width: "370px", height: "50px"}}
+                />
+            </form>
+        </div>
     );
 }
 
